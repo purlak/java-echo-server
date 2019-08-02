@@ -3,7 +3,7 @@ import java.io.*;
 
 public class EchoServer {
 	ServerSocket serverSocket;
-	Socket clientSocket;
+	ClientSocket clientSocket;
 
 	public EchoServer(ServerSocket serverSocket) {
 		this.serverSocket = serverSocket;
@@ -15,15 +15,13 @@ public class EchoServer {
 	}
 
 	private void serverAcceptsConnection() throws IOException {
-		clientSocket = serverSocket.accept();
+		clientSocket = new ClientSocket(serverSocket.accept());
 	}
 
 	private void echoMessage() throws IOException {
-		PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
-		BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-		String input = in.readLine();
+		String input = clientSocket.getInput();
 		if (input != null) {
-			out.println(input);
+			clientSocket.sendOutput(input);
 			echoMessage();
 		}
 	}
